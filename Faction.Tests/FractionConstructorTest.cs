@@ -7,7 +7,7 @@ namespace Fraction.Tests {
     public class FractionConstructorTest{
         [TestCase(3,7)]
         [TestCase(-9,55)]
-        [TestCase(0,8)]
+        [TestCase(0,1)]
         public void TrivialCase(int num, int den){
             var f = new Fraction(num, den);
             Assert.Multiple(() => {
@@ -25,6 +25,8 @@ namespace Fraction.Tests {
         [TestCase(-3*89,7*89,-3,7)]
         [TestCase(-3*65,-11*65,3,11)]
         [TestCase(3*8,5*8,3,5)]
+        [TestCase(0,7,0,1)]
+        [TestCase(0,-3,0,1)]
         public void StandardCase(int num, int den, int expectedNum, int expectedDen){
             var f = new Fraction(num, den);
             Assert.Multiple((() => {

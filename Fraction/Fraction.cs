@@ -7,28 +7,27 @@ namespace Fraction {
         public int Denominator{ get; }
         
         public Fraction(int n, int d){
+            //Only applies to positive numbers
             static int Gcd(int a, int b){
-                a = Math.Abs(a);
-                b = Math.Abs(b);
                 while (a != b)
-                    if (a < b) b = b - a;
-                    else a = a - b;
+                    if (a < b) b -= a;
+                    else a -= b;
                 return a;
             }
             if (0 == d)
                 throw new ArgumentOutOfRangeException(nameof(d), "Denominator cannot be 0");
-            var gcd = Gcd(n,d);
-            if (Math.Sign(n)!=Math.Sign(d)){
-                n = -Math.Abs(n/gcd);
-                d = Math.Abs(d/gcd);
+            if (0==n){
+                Numerator = 0;
+                Denominator = 1;
             }
             else{
-                n = Math.Abs(n/gcd);
-                d = Math.Abs(d/gcd);
+                var negative = Math.Sign(n)*Math.Sign(d);
+                n = Math.Abs(n);
+                d = Math.Abs(d);
+                var gcd = Gcd(n,d);
+                Numerator = negative*n/gcd;
+                Denominator = d/gcd;
             }
-            
-            Numerator = n;
-            Denominator = d;
         }
 
         public static Fraction operator +(Fraction x, Fraction y){
