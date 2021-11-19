@@ -1,31 +1,39 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-[assembly:InternalsVisibleTo("Fraction.Tests")]
-
-
 namespace Fraction {
     public class Fraction {
         public int Numerator{ get; }
         public int Denominator{ get; }
-        static int GCD(int p, int q){
-            return q == 0? p:GCD(q, p % q);
-        }
-        internal static void Simplify(ref int n, ref int d){
-            if (0==d)
-                throw new ArgumentOutOfRangeException(nameof(d), "The denominator cannot be zero");
-            var positive = Math.Sign(n) == Math.Sign(d);
-            n = Math.Abs(n);
-            d = Math.Abs(d);
-            var gcd = GCD(n, d);
-            n /= gcd;
-            d /= gcd;
-            if (!positive) n = -n;
+        
+        public Fraction(int n, int d){
+            static int Gcd(int a, int b){
+                a = Math.Abs(a);
+                b = Math.Abs(b);
+                while (a != b)
+                    if (a < b) b = b - a;
+                    else a = a - b;
+                return a;
+            }
+            if (0 == d)
+                throw new ArgumentOutOfRangeException(nameof(d), "Denominator cannot be 0");
+            var gcd = Gcd(n,d);
+            if (Math.Sign(n)!=Math.Sign(d)){
+                n = -Math.Abs(n/gcd);
+                d = Math.Abs(d/gcd);
+            }
+            else{
+                n = Math.Abs(n/gcd);
+                d = Math.Abs(d/gcd);
+            }
+            
+            Numerator = n;
+            Denominator = d;
         }
 
-        public Fraction(int num, int den){
-            Numerator = num;
-            Denominator = den;
+        public static Fraction operator +(Fraction x, Fraction y){
+            return new Fraction(x.Numerator * y.Denominator + x.Denominator * y.Numerator,
+                x.Denominator * y.Denominator);
         }
     }
 }
